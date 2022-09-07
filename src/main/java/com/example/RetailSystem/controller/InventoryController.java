@@ -42,5 +42,37 @@ public class InventoryController {
         return newItem;
     }
 
+    @PutMapping("/items/{id}")
+    public Item updateItem(@PathVariable("dpci") Long dpci, @RequestBody Item i) {
+        Optional<Item> checkItem = this.itemRepository.findByDpci(dpci);
 
+        if (!checkItem.isPresent()) {
+            return null;
+        }
+
+        Item itemToUpdate = checkItem.get();
+
+        if (i.getName() != null) {
+            itemToUpdate.setName(i.getName());
+        }
+
+        if (i.getPrice() != null) {
+            itemToUpdate.setPrice(i.getPrice());
+        }
+
+        if (i.getOnHand() != null) {
+            itemToUpdate.setOnHand(i.getOnHand());
+        }
+
+        if (i.getOnSale() != null) {
+            itemToUpdate.setOnSale(i.getOnSale());
+        }
+
+        if (i.getFloorLocation() != null) {
+            itemToUpdate.setFloorLocation(i.getFloorLocation());
+        }
+
+        Item updatedItem = this.itemRepository.save(itemToUpdate);
+        return updatedItem;
+    }
 }

@@ -1,0 +1,4 @@
+http://www.h2database.com/html/cheatSheet.html
+https://www.baeldung.com/spring-boot-h2-database
+https://docs.jboss.org/hibernate/orm/5.4/userguide/html_single/Hibernate_User_Guide.html#configurations-hbmddl
+https://projectlombok.org/features/

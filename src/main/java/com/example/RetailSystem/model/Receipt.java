@@ -19,9 +19,11 @@ public class Receipt {
     private Date date;
 
     @Column(name = "ITEMS")
+    @ElementCollection(targetClass=Integer.class)
     private Set<Item> items;
 
     @Column(name = "RETURNED")
+    @ElementCollection(targetClass=Integer.class)
     private Set<Item> returned;
 
     public Long getReceiptNo() {

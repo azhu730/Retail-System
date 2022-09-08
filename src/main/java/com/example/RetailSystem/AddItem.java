@@ -8,9 +8,12 @@ import com.example.RetailSystem.controller.InventoryController;
 
 public class AddItem {
     public static void main(String[] args) {
+        Item newItem = makeItem();
+    }
+
+    public static Item makeItem() {
         Scanner console = new Scanner(System.in);
         Item newItem = new Item();
-        String input = "";
 
         System.out.println("Please input the information of your item:");
 
@@ -43,6 +46,8 @@ public class AddItem {
 
         boolean onSale = getOnSale(console);
         newItem.setOnSale(onSale);
+
+        return newItem;
     }
 
     public static int getDepartmentNo(Scanner console) {

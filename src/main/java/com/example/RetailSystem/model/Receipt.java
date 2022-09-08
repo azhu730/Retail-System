@@ -2,6 +2,7 @@ package com.example.RetailSystem.model;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "RECEIPTS")
@@ -17,6 +18,12 @@ public class Receipt {
     @Column(name = "DATE")
     private Date date;
 
+    @Column(name = "ITEMS")
+    private Set<Item> items;
+
+    @Column(name = "RETURNED")
+    private Set<Item> returned;
+
     public Long getReceiptNo() {
         return this.receiptNo;
     }
@@ -25,11 +32,27 @@ public class Receipt {
         return this.getDate();
     }
 
-    public void setReceiptNo() {
+    public Set<Item> getItems() {
+        return this.items;
+    }
+
+    public Set<Item> getReturned() {
+        return this.returned;
+    }
+
+    public void setReceiptNo(Long receiptNo) {
         this.receiptNo = receiptNo;
     }
 
-    public void setDate() {
+    public void setDate(Date date) {
         this.date = date;
+    }
+
+    public void setItems(Set<Item> items) {
+        this.items = items;
+    }
+
+    public void setReturned(Set<Item> returned) {
+        this.returned = returned;
     }
 }

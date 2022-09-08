@@ -10,5 +10,4 @@ public class RetailSystemApplication {
 		SpringApplication.run(RetailSystemApplication.class, args);
 		System.out.println("hello");
 	}
-
 }

@@ -12,4 +12,5 @@ public interface ReceiptRepository extends CrudRepository<Receipt, Integer> {
     Optional<Receipt> findByReceiptNo(Integer receiptNo);
 
     List<Receipt> findByDate(Date date);
+
 }

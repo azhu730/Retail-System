@@ -10,6 +10,7 @@ import com.example.RetailSystem.model.Item;
 public interface ItemRepository extends CrudRepository<Item, Integer> {
     Optional<Item> findByDpci(Long dpci);
     Optional<Item> findByName(String name);
+    Optional<Item> findByUpc(String upc);
 
     List<Item> findByPriceLessThan(Double price);
     List<Item> findByPriceGreaterThan(Double price);
@@ -18,4 +19,7 @@ public interface ItemRepository extends CrudRepository<Item, Integer> {
     List<Item> findByOnSaleTrue();
     List<Item> findByOnSaleFalse();
     List<Item> findByFloorLocation(String floorLocation);
+    List<Item> findByDepartmentNo(Integer departmentNo);
+    List<Item> findByClassNo(Integer classNo);
+    List<Item> findByItemNo(Integer itemNo);
 }

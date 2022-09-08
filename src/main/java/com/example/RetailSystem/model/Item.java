@@ -12,6 +12,18 @@ public class Item {
     @Id
     private Long dpci;
 
+    @Column(name = "DEPARTMENT")
+    private Integer departmentNo;
+
+    @Column(name = "CLASS")
+    private Integer classNo;
+
+    @Column(name = "ITEM_NO")
+    private Integer itemNo;
+
+    @Column(name = "UPC")
+    private String upc;
+
     @Column(name = "NAME")
     private String name;
 
@@ -29,6 +41,22 @@ public class Item {
 
     public Long getDpci() {
         return this.dpci;
+    }
+
+    public Integer getDepartmentNo() {
+        return this.departmentNo;
+    }
+
+    public Integer getClassNo() {
+        return this.classNo;
+    }
+
+    public Integer getItemNo() {
+        return this.itemNo;
+    }
+
+    public String getUpc() {
+        return this.upc;
     }
 
     public String getName() {
@@ -53,6 +81,22 @@ public class Item {
 
     public void setDpci(Long dpci) {
         this.dpci = dpci;
+    }
+
+    public void setDepartmentNo(Integer departmentNo) {
+        this.departmentNo = departmentNo;
+    }
+
+    public void setClassNo(Integer classNo) {
+        this.classNo = classNo;
+    }
+
+    public void setItemNo(Integer itemNo) {
+        this.itemNo = itemNo;
+    }
+
+    public void setUpc(String upc) {
+        this.upc = upc;
     }
 
     public void setName(String name) {

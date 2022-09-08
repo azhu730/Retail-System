@@ -52,6 +52,22 @@ public class InventoryController {
 
         Item itemToUpdate = checkItem.get();
 
+        if (i.getDepartmentNo() != null) {
+            itemToUpdate.setDepartmentNo(i.getDepartmentNo());
+        }
+
+        if (i.getClassNo() != null) {
+            itemToUpdate.setClassNo(i.getClassNo());
+        }
+
+        if (i.getItemNo() != null) {
+            itemToUpdate.setItemNo(i.getItemNo());
+        }
+
+        if (i.getUpc() != null) {
+            itemToUpdate.setUpc(i.getUpc());
+        }
+
         if (i.getName() != null) {
             itemToUpdate.setName(i.getName());
         }

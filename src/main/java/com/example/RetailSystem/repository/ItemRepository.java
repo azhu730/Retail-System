@@ -8,7 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import com.example.RetailSystem.model.Item;
 
 public interface ItemRepository extends CrudRepository<Item, Integer> {
-    Optional<Item> findByDpci(Long dpci);
+    Optional<Item> findByDpci(String dpci);
     Optional<Item> findByName(String name);
     Optional<Item> findByUpc(String upc);
 

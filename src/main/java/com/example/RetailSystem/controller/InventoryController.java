@@ -32,7 +32,7 @@ public class InventoryController {
     }
 
     @GetMapping("/items/{dpci}")
-    public Optional<Item> getItemByDpci(@PathVariable("dpci") Long dpci) {
+    public Optional<Item> getItemByDpci(@PathVariable("dpci") String dpci) {
         return this.itemRepository.findByDpci(dpci);
     }
 
@@ -43,7 +43,7 @@ public class InventoryController {
     }
 
     @PutMapping("/items/{dpci}")
-    public Item updateItem(@PathVariable("dpci") Long dpci, @RequestBody Item i) {
+    public Item updateItem(@PathVariable("dpci") String dpci, @RequestBody Item i) {
         Optional<Item> checkItem = this.itemRepository.findByDpci(dpci);
 
         if (!checkItem.isPresent()) {
@@ -93,7 +93,7 @@ public class InventoryController {
     }
 
     @DeleteMapping("item/{dpci}")
-    public Item deleteItem(@PathVariable("dpci") Long dpci) {
+    public Item deleteItem(@PathVariable("dpci") String dpci) {
         Optional<Item> checkItem = this.itemRepository.findByDpci(dpci);
 
         if (!checkItem.isPresent()) {

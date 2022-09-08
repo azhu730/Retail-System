@@ -26,7 +26,7 @@ public class AddItem {
         int itemNo = getItemNo(console);
         newItem.setItemNo(itemNo);
 
-        long dpci = getDPCI(departmentNo, classNo, itemNo);
+        String dpci = getDPCI(departmentNo, classNo, itemNo);
         newItem.setDpci(dpci);
 
         String name = getName(console);
@@ -138,14 +138,14 @@ public class AddItem {
         return Integer.valueOf(itemNoStr);
     }
 
-    public static Long getDPCI(int departmentNo, int classNo, int itemNo) {
+    public static String getDPCI(int departmentNo, int classNo, int itemNo) {
         String deptPadded = String.format("%03d" , departmentNo);
         String classPadded = String.format("%02d" , classNo);
         String itemPadded = String.format("%04d" , itemNo);
 
         System.out.println("Item DPCI: " + deptPadded + "-" + classPadded + "-" + itemPadded);
 
-        return Long.valueOf(deptPadded + classPadded + itemPadded);
+        return deptPadded + classPadded + itemPadded;
     }
 
     public static String getName(Scanner console) {

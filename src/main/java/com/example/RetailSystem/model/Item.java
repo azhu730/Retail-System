@@ -10,7 +10,7 @@ import javax.persistence.Table;
 public class Item {
 
     @Id
-    private Long dpci;
+    private String dpci;
 
     @Column(name = "DEPARTMENT")
     private Integer departmentNo;
@@ -39,7 +39,7 @@ public class Item {
     @Column(name = "FLOOR_LOCATION")
     private String floorLocation;
 
-    public Long getDpci() {
+    public String getDpci() {
         return this.dpci;
     }
 
@@ -79,7 +79,7 @@ public class Item {
         return this.floorLocation;
     }
 
-    public void setDpci(Long dpci) {
+    public void setDpci(String dpci) {
         this.dpci = dpci;
     }
 

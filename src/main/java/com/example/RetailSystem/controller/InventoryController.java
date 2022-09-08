@@ -42,7 +42,7 @@ public class InventoryController {
         return newItem;
     }
 
-    @PutMapping("/items/{id}")
+    @PutMapping("/items/{dpci}")
     public Item updateItem(@PathVariable("dpci") Long dpci, @RequestBody Item i) {
         Optional<Item> checkItem = this.itemRepository.findByDpci(dpci);
 
@@ -74,5 +74,18 @@ public class InventoryController {
 
         Item updatedItem = this.itemRepository.save(itemToUpdate);
         return updatedItem;
+    }
+
+    @DeleteMapping("item/{dpci}")
+    public Item deleteItem(@PathVariable("dpci") Long dpci) {
+        Optional<Item> checkItem = this.itemRepository.findByDpci(dpci);
+
+        if (!checkItem.isPresent()) {
+            return null;
+        }
+
+        Item itemToDelete = checkItem.get();
+        this.itemRepository.delete(itemToDelete);
+        return itemToDelete;
     }
 }

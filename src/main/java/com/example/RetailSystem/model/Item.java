@@ -12,10 +12,10 @@ public class Item {
     @Id
     private String dpci;
 
-    @Column(name = "DEPARTMENT")
+    @Column(name = "DEPARTMENT_NO")
     private Integer departmentNo;
 
-    @Column(name = "CLASS")
+    @Column(name = "CLASS_NO")
     private Integer classNo;
 
     @Column(name = "ITEM_NO")
@@ -24,7 +24,7 @@ public class Item {
     @Column(name = "UPC")
     private String upc;
 
-    @Column(name = "NAME")
+    @Column(name = "ITEM_NAME")
     private String name;
 
     @Column(name = "PRICE")

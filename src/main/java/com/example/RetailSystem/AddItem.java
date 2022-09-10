@@ -1,14 +1,42 @@
 package com.example.RetailSystem;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.Scanner;
 
 import com.example.RetailSystem.model.Item;
-import com.example.RetailSystem.repository.ItemRepository;
-import com.example.RetailSystem.controller.InventoryController;
 
 public class AddItem {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws URISyntaxException, IOException, InterruptedException {
         Item newItem = makeItem();
+
+        String itemBody = "";
+        itemBody += "{\"dpci\":\"" + newItem.getDpci() + "\",";
+        itemBody += "\"departmentNo\":" + newItem.getDepartmentNo() + ",";
+        itemBody += "\"classNo\":" + newItem.getClassNo() + ",";
+        itemBody += "\"itemNo\":" + newItem.getItemNo() + ",";
+        itemBody += "\"upc\":\"" + newItem.getUpc() + "\",";
+        itemBody += "\"name\":\"" + newItem.getName() + "\",";
+        itemBody += "\"price\":" + newItem.getPrice() + ",";
+        itemBody += "\"onHand\":" + newItem.getOnHand() + ",";
+        itemBody += "\"onSale\":" + newItem.getOnSale() + ",";
+        itemBody += "\"floorLocation\":\"" + newItem.getFloorLocation() + "\"}";
+
+        URI uri = new URI("http://localhost:8080/items");
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(uri)
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(itemBody))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        System.out.println(response.body());
     }
 
     public static Item makeItem() {

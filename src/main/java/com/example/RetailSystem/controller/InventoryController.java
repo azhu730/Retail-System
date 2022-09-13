@@ -44,6 +44,7 @@ public class InventoryController {
     @PostMapping("/items")
     public Item addItem(@RequestBody Item item) {
         Item newItem = this.itemRepository.save(item);
+        System.out.println(newItem);
         return newItem;
     }
 
@@ -101,9 +102,9 @@ public class InventoryController {
         return updatedItem;
     }
 
-    @DeleteMapping("item/{tcin}")
-    public Item deleteItem(@PathVariable("tcin") Integer tcin) {
-        Optional<Item> checkItem = this.itemRepository.findByTcin(tcin);
+    @DeleteMapping("items/dpci/{dpci}")
+    public Item deleteItem(@PathVariable("dpci") String dpci) {
+        Optional<Item> checkItem = this.itemRepository.findByDpci(dpci);
 
         if (!checkItem.isPresent()) {
             return null;

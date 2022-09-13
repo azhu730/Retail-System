@@ -1,15 +1,17 @@
 package com.example.RetailSystem.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Column;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "ITEMS")
 public class Item {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "TCIN")
+    private Integer tcin;
+
+    @Column(name = "DPCI")
     private String dpci;
 
     @Column(name = "DEPARTMENT_NO")
@@ -38,6 +40,10 @@ public class Item {
 
     @Column(name = "FLOOR_LOCATION")
     private String floorLocation;
+
+    public Integer getTcin() {
+        return this.tcin;
+    }
 
     public String getDpci() {
         return this.dpci;
@@ -77,6 +83,10 @@ public class Item {
 
     public String getFloorLocation() {
         return this.floorLocation;
+    }
+
+    public void setTcin(Integer tcin) {
+        this.tcin = tcin;
     }
 
     public void setDpci(String dpci) {

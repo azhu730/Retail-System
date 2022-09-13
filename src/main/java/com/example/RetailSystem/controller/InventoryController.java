@@ -31,7 +31,12 @@ public class InventoryController {
         return this.itemRepository.findAll();
     }
 
-    @GetMapping("/items/{dpci}")
+    @GetMapping("/items/tcin/{tcin}")
+    public Optional<Item> getItemByTcin(@PathVariable("tcin") Integer tcin) {
+        return this.itemRepository.findByTcin(tcin);
+    }
+
+    @GetMapping("/items/dpci/{dpci}")
     public Optional<Item> getItemByDpci(@PathVariable("dpci") String dpci) {
         return this.itemRepository.findByDpci(dpci);
     }
@@ -42,15 +47,19 @@ public class InventoryController {
         return newItem;
     }
 
-    @PutMapping("/items/{dpci}")
-    public Item updateItem(@PathVariable("dpci") String dpci, @RequestBody Item i) {
-        Optional<Item> checkItem = this.itemRepository.findByDpci(dpci);
+    @PutMapping("/items/{tcin}")
+    public Item updateItem(@PathVariable("tcin") Integer tcin, @RequestBody Item i) {
+        Optional<Item> checkItem = this.itemRepository.findByTcin(tcin);
 
         if (!checkItem.isPresent()) {
             return null;
         }
 
         Item itemToUpdate = checkItem.get();
+
+        if (i.getDpci() != null) {
+            itemToUpdate.setDpci(i.getDpci());
+        }
 
         if (i.getDepartmentNo() != null) {
             itemToUpdate.setDepartmentNo(i.getDepartmentNo());
@@ -92,9 +101,9 @@ public class InventoryController {
         return updatedItem;
     }
 
-    @DeleteMapping("item/{dpci}")
-    public Item deleteItem(@PathVariable("dpci") String dpci) {
-        Optional<Item> checkItem = this.itemRepository.findByDpci(dpci);
+    @DeleteMapping("item/{tcin}")
+    public Item deleteItem(@PathVariable("tcin") Integer tcin) {
+        Optional<Item> checkItem = this.itemRepository.findByTcin(tcin);
 
         if (!checkItem.isPresent()) {
             return null;

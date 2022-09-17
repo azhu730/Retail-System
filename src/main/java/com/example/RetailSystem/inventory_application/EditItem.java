@@ -26,9 +26,8 @@ public class EditItem {
         Set<String> validResponses = getValidResponses();
 
         Set<String> requests = getRequest(console, validResponses);
-        int tcin = getTcin(itemJson);
 
-        executeRequest(console, requests, tcin);
+        executeRequest(console, requests, itemJson);
     }
 
     public static String getDpci(Scanner console) {
@@ -111,12 +110,40 @@ public class EditItem {
         return request;
     }
 
-    public static void executeRequest(Scanner console, Set<String> requests, int tcin) throws URISyntaxException, IOException, InterruptedException {
+    public static void executeRequest(Scanner console, Set<String> requests, String itemJson) throws URISyntaxException, IOException, InterruptedException {
+        JSONObject obj = new JSONObject(itemJson);
+
         StringBuilder input = new StringBuilder("{");
 
-        int count = 0;
+        boolean changeDpci = false;
+        int deptNo = obj.getInt("departmentNo");
+        int classNo = obj.getInt("classNo");
+        int itemNo = obj.getInt("itemNo");
+
         for (String r : requests) {
-            count++;
+            if (r.equals("departmentno")) {
+                int newDeptNo = getDepartmentNo(console);
+                input.append("\"departmentNo\":").append(newDeptNo);
+
+                deptNo = newDeptNo;
+                changeDpci = true;
+            }
+
+            if (r.equals("classno")) {
+                int newClassNo = getClassNo(console);
+                input.append("\"classNo\":").append(newClassNo);
+
+                classNo = newClassNo;
+                changeDpci = true;
+            }
+
+            if (r.equals("itemno")) {
+                int newItemNo = getItemNo(console);
+                input.append("\"itemNo\":").append(newItemNo);
+
+                itemNo = newItemNo;
+                changeDpci = true;
+            }
 
             if (r.equals("upc")) {
                 String newUpc = getUPC(console);
@@ -144,14 +171,19 @@ public class EditItem {
                 input.append("\"floorLocation\":\"").append(newFloorLocation).append("\"");
             }
 
-            if (count != requests.size()) {
-                input.append(",");
-            }
+            input.append(",");
+        }
+
+        if (changeDpci) {
+            String newDpci = getDPCIStr(deptNo, classNo, itemNo);
+            input.append("\"dpci\":\"").append(newDpci).append("\"");
+        } else {
+            input = new StringBuilder(input.substring(0, input.length() - 1));
         }
 
         input.append("}");
 
-        URI uri = new URI("http://localhost:8080/items/tcin/" + tcin);
+        URI uri = new URI("http://localhost:8080/items/tcin/" + obj.getInt("tcin"));
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(uri)
@@ -164,9 +196,107 @@ public class EditItem {
         System.out.println(response.body());
     }
 
-    public static int getTcin(String itemJson) {
-        JSONObject obj = new JSONObject(itemJson);
-        return obj.getInt("tcin");
+    public static int getDepartmentNo(Scanner console) {
+        boolean contLoop = true;
+        StringBuilder departmentNoStr = new StringBuilder();
+
+        while (contLoop) {
+            System.out.print("Enter new department number (Input 3 numbers between 000-999): ");
+            String input = console.nextLine();
+
+            int numNumerics = 0;
+            if (input.length() == 3) {
+                for (int i = 0; i < input.length(); i++) {
+                    if (Character.isDigit(input.charAt(i))) {
+                        departmentNoStr.append(input.charAt(i));
+                        numNumerics++;
+                    }
+                }
+            }
+
+            if (numNumerics == 3) {
+                contLoop = false;
+            }
+
+            if (contLoop) {
+                System.out.println("Invalid department number. Try again.");
+                departmentNoStr = new StringBuilder();
+            }
+        }
+
+        return Integer.parseInt(departmentNoStr.toString());
+    }
+
+    public static int getClassNo(Scanner console) {
+        boolean contLoop = true;
+        StringBuilder classNoStr = new StringBuilder();
+
+        while (contLoop) {
+            System.out.print("Enter new class number (Input 2 numbers between 00-99): ");
+            String input = console.nextLine();
+
+            int numNumerics = 0;
+            if (input.length() == 2) {
+                for (int i = 0; i < input.length(); i++) {
+                    if (Character.isDigit(input.charAt(i))) {
+                        classNoStr.append(input.charAt(i));
+                        numNumerics++;
+                    }
+                }
+            }
+
+            if (numNumerics == 2) {
+                contLoop = false;
+            }
+
+            if (contLoop) {
+                System.out.println("Invalid class number. Try again.");
+                classNoStr = new StringBuilder();
+            }
+        }
+
+        return Integer.parseInt(classNoStr.toString());
+    }
+
+    public static int getItemNo(Scanner console) {
+        boolean contLoop = true;
+        StringBuilder itemNoStr = new StringBuilder();
+
+        while (contLoop) {
+            System.out.print("Enter new item number (Input 4 numbers between 0000-9999): ");
+            String input = console.nextLine();
+
+            int numNumerics = 0;
+            if (input.length() == 4) {
+                for (int i = 0; i < input.length(); i++) {
+                    if (Character.isDigit(input.charAt(i))) {
+                        itemNoStr.append(input.charAt(i));
+                        numNumerics++;
+                    }
+                }
+            }
+
+            if (numNumerics == 4) {
+                contLoop = false;
+            }
+
+            if (contLoop) {
+                System.out.println("Invalid item number. Try again.");
+                itemNoStr = new StringBuilder();
+            }
+        }
+
+        return Integer.parseInt(itemNoStr.toString());
+    }
+
+    public static String getDPCIStr(int departmentNo, int classNo, int itemNo) {
+        String deptPadded = String.format("%03d" , departmentNo);
+        String classPadded = String.format("%02d" , classNo);
+        String itemPadded = String.format("%04d" , itemNo);
+
+        System.out.println("Item DPCI: " + deptPadded + "-" + classPadded + "-" + itemPadded);
+
+        return deptPadded + classPadded + itemPadded;
     }
 
     public static String getUPC(Scanner console) {

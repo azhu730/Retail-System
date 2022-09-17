@@ -80,7 +80,7 @@ public class AddItem {
 
     public static int getDepartmentNo(Scanner console) {
         boolean contLoop = true;
-        String departmentNoStr = "";
+        StringBuilder departmentNoStr = new StringBuilder();
 
         while (contLoop) {
             System.out.print("Enter department number (Input 3 numbers between 000-999): ");
@@ -90,7 +90,7 @@ public class AddItem {
             if (input.length() == 3) {
                 for (int i = 0; i < input.length(); i++) {
                     if (Character.isDigit(input.charAt(i))) {
-                        departmentNoStr += input.charAt(i);
+                        departmentNoStr.append(input.charAt(i));
                         numNumerics++;
                     }
                 }
@@ -102,16 +102,16 @@ public class AddItem {
 
             if (contLoop) {
                 System.out.println("Invalid department number. Try again.");
-                departmentNoStr = "";
+                departmentNoStr = new StringBuilder();
             }
         }
 
-        return Integer.valueOf(departmentNoStr);
+        return Integer.parseInt(departmentNoStr.toString());
     }
 
     public static int getClassNo(Scanner console) {
         boolean contLoop = true;
-        String classNoStr = "";
+        StringBuilder classNoStr = new StringBuilder();
 
         while (contLoop) {
             System.out.print("Enter class number (Input 2 numbers between 00-99): ");
@@ -121,7 +121,7 @@ public class AddItem {
             if (input.length() == 2) {
                 for (int i = 0; i < input.length(); i++) {
                     if (Character.isDigit(input.charAt(i))) {
-                        classNoStr += input.charAt(i);
+                        classNoStr.append(input.charAt(i));
                         numNumerics++;
                     }
                 }
@@ -133,16 +133,16 @@ public class AddItem {
 
             if (contLoop) {
                 System.out.println("Invalid class number. Try again.");
-                classNoStr = "";
+                classNoStr = new StringBuilder();
             }
         }
 
-        return Integer.valueOf(classNoStr);
+        return Integer.parseInt(classNoStr.toString());
     }
 
     public static int getItemNo(Scanner console) {
         boolean contLoop = true;
-        String itemNoStr = "";
+        StringBuilder itemNoStr = new StringBuilder();
 
         while (contLoop) {
             System.out.print("Enter item number (Input 4 numbers between 0000-9999): ");
@@ -152,7 +152,7 @@ public class AddItem {
             if (input.length() == 4) {
                 for (int i = 0; i < input.length(); i++) {
                     if (Character.isDigit(input.charAt(i))) {
-                        itemNoStr += input.charAt(i);
+                        itemNoStr.append(input.charAt(i));
                         numNumerics++;
                     }
                 }
@@ -164,11 +164,11 @@ public class AddItem {
 
             if (contLoop) {
                 System.out.println("Invalid item number. Try again.");
-                itemNoStr = "";
+                itemNoStr = new StringBuilder();
             }
         }
 
-        return Integer.valueOf(itemNoStr);
+        return Integer.parseInt(itemNoStr.toString());
     }
 
     public static String getDPCI(int departmentNo, int classNo, int itemNo) {
@@ -183,8 +183,7 @@ public class AddItem {
 
     public static String getName(Scanner console) {
         System.out.print("Item Name: ");
-        String input = console.nextLine();
-        return input;
+        return console.nextLine();
     }
 
     public static double getPrice(Scanner console) {
@@ -239,13 +238,11 @@ public class AddItem {
             }
         }
 
-        return Integer.valueOf(input);
+        return Integer.parseInt(input);
     }
 
     public static boolean getOnSale(Scanner console) {
-        boolean contLoop = true;
-
-        while (contLoop) {
+        while (true) {
             System.out.print("Is this item on sale? (Y/N): ");
 
             String input = console.nextLine().toLowerCase();
@@ -258,8 +255,6 @@ public class AddItem {
                 System.out.println("Invalid response. Try again");
             }
         }
-
-        return false;
     }
 
     public static String getFloorLocation(Scanner console) {

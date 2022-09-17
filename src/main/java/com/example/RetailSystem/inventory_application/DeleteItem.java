@@ -30,7 +30,7 @@ public class DeleteItem {
 
     public static String getDpci(Scanner console) {
         boolean contLoop = true;
-        String dpciParsed = "";
+        StringBuilder dpciParsed = new StringBuilder();
 
         while (contLoop) {
             System.out.print("Enter item DPCI: ");
@@ -38,17 +38,17 @@ public class DeleteItem {
 
             for (int i = 0; i < dpci.length(); i++) {
                 if (Character.isDigit(dpci.charAt(i))) {
-                    dpciParsed += dpci.charAt(i);
+                    dpciParsed.append(dpci.charAt(i));
                 }
             }
             if (dpciParsed.length() == 9) {
                 contLoop = false;
             } else {
                 System.out.println("Invalid DPCI. Try again.");
-                dpciParsed = "";
+                dpciParsed = new StringBuilder();
             }
         }
 
-        return dpciParsed;
+        return dpciParsed.toString();
     }
 }

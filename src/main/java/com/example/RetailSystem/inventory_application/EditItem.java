@@ -25,15 +25,15 @@ public class EditItem {
 
         Set<String> validResponses = getValidResponses();
 
-        String request = getRequest(console, validResponses);
+        Set<String> requests = getRequest(console, validResponses);
         int tcin = getTcin(itemJson);
 
-        executeRequest(console, request, tcin);
+        executeRequest(console, requests, tcin);
     }
 
     public static String getDpci(Scanner console) {
         boolean contLoop = true;
-        String dpciParsed = "";
+        StringBuilder dpciParsed = new StringBuilder();
 
         while (contLoop) {
             System.out.print("Enter item DPCI: ");
@@ -41,18 +41,18 @@ public class EditItem {
 
             for (int i = 0; i < dpci.length(); i++) {
                 if (Character.isDigit(dpci.charAt(i))) {
-                    dpciParsed += dpci.charAt(i);
+                    dpciParsed.append(dpci.charAt(i));
                 }
             }
             if (dpciParsed.length() == 9) {
                 contLoop = false;
             } else {
                 System.out.println("Invalid DPCI. Try again.");
-                dpciParsed = "";
+                dpciParsed = new StringBuilder();
             }
         }
 
-        return dpciParsed;
+        return dpciParsed.toString();
     }
 
     public static String getJson(String dpci) throws IOException, InterruptedException, URISyntaxException {
@@ -76,49 +76,87 @@ public class EditItem {
         validResponses.add("name");
         validResponses.add("price");
         validResponses.add("onhand");
-        validResponses.add("onsale");
+        // validResponses.add("onsale");
         validResponses.add("floorlocation");
+        validResponses.add("done");
 
         return validResponses;
     }
 
-    public static String getRequest(Scanner console, Set<String> validResponses) {
+    public static Set<String> getRequest(Scanner console, Set<String> validResponses) {
         boolean contLoop = true;
-        String request = "";
+        Set<String> request = new HashSet<>();
+        Set<String> added = new HashSet<>();
 
         while (contLoop) {
-            System.out.print("Choose from the following: departmentNo, classNo, itemNo, upc, name, " +
-                    "price, onHand, onSale, floorLocation: ");
-            request = console.nextLine().toLowerCase();
+            System.out.print("Enter one from the following: departmentNo, classNo, itemNo, upc, name, " +
+                    "price, onHand, floorLocation (Enter \"done\" if done): ");
+            String singleRequest = console.nextLine().toLowerCase();
 
-            if (!validResponses.contains(request)) {
-                request = "";
+            if (!validResponses.contains(singleRequest)) {
                 System.out.println("Invalid response. Try again.");
-            } else {
+            } else if (singleRequest.equals("done")) {
                 contLoop = false;
+            } else {
+                if (added.contains(singleRequest)) {
+                    System.out.println("Property already edited. Enter another property.");
+                } else {
+                    request.add(singleRequest);
+                    added.add(singleRequest);
+                    System.out.println("Success. Add another property or enter \"done\".");
+                }
             }
         }
 
         return request;
     }
 
-    public static void executeRequest(Scanner console, String changeRequest, int tcin) throws URISyntaxException, IOException, InterruptedException {
-        String input = "{";
+    public static void executeRequest(Scanner console, Set<String> requests, int tcin) throws URISyntaxException, IOException, InterruptedException {
+        StringBuilder input = new StringBuilder("{");
 
-        if (changeRequest.equals("name")) {
-            System.out.print("Enter new name: ");
-            String newName = console.nextLine();
-            input += "\"name\":\"" + newName + "\"";
+        int count = 0;
+        for (String r : requests) {
+            count++;
+
+            if (r.equals("upc")) {
+                String newUpc = getUPC(console);
+                input.append("\"upc\":\"").append(newUpc).append("\"");
+            }
+
+            if (r.equals("name")) {
+                System.out.print("Enter new name: ");
+                String newName = console.nextLine();
+                input.append("\"name\":\"").append(newName).append("\"");
+            }
+
+            if (r.equals("price")) {
+                double newPrice = getPrice(console);
+                input.append("\"price\":").append(newPrice);
+            }
+
+            if (r.equals("onhand")) {
+                int newOnHand = getOnHand(console);
+                input.append("\"onHand\":").append(newOnHand);
+            }
+
+            if (r.equals("floorlocation")) {
+                String newFloorLocation = getFloorLocation(console);
+                input.append("\"floorLocation\":\"").append(newFloorLocation).append("\"");
+            }
+
+            if (count != requests.size()) {
+                input.append(",");
+            }
         }
 
-        input += "}";
+        input.append("}");
 
         URI uri = new URI("http://localhost:8080/items/tcin/" + tcin);
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(uri)
                 .header("Content-Type", "application/json")
-                .PUT(HttpRequest.BodyPublishers.ofString(input))
+                .PUT(HttpRequest.BodyPublishers.ofString(input.toString()))
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -129,5 +167,121 @@ public class EditItem {
     public static int getTcin(String itemJson) {
         JSONObject obj = new JSONObject(itemJson);
         return obj.getInt("tcin");
+    }
+
+    public static String getUPC(Scanner console) {
+        boolean contLoop = true;
+        String input = "";
+
+        while (contLoop) {
+            System.out.print("Enter item's new UPC: ");
+            input = console.nextLine();
+            boolean allNumeric = true;
+
+            for (int i = 0; i < input.length(); i++) {
+                if (!Character.isDigit(input.charAt(i))) {
+                    allNumeric = false;
+                }
+            }
+
+            if (allNumeric && input.length() == 12) {
+                contLoop = false;
+            } else {
+                System.out.println("Invalid UPC. Try again.");
+                input = "";
+            }
+        }
+
+        return input;
+    }
+
+    public static double getPrice(Scanner console) {
+        boolean contLoop = true;
+        String input = "";
+
+        while (contLoop) {
+            System.out.print("Enter new price: ");
+            input = console.nextLine();
+
+            boolean allNumeric = true;
+            int decimalCount = 0;
+
+            for (int i = 0; i < input.length(); i++) {
+                allNumeric = Character.isDigit(input.charAt(i));
+
+                if (input.charAt(i) == '.') {
+                    decimalCount++;
+                }
+            }
+
+            if (allNumeric && decimalCount == 1) {
+                contLoop = false;
+            } else {
+                System.out.println("Invalid price. Try again.");
+            }
+        }
+
+        return Double.parseDouble(input);
+    }
+
+    public static int getOnHand(Scanner console) {
+        boolean contLoop = true;
+        String input = "";
+
+        while (contLoop) {
+            System.out.print("Enter new on hand count: ");
+            input = console.nextLine();
+            boolean allNumeric = true;
+
+            for (int i = 0; i < input.length(); i++) {
+                if (!Character.isDigit(input.charAt(i))) {
+                    allNumeric = false;
+                }
+            }
+
+            if (allNumeric) {
+                contLoop = false;
+            } else {
+                System.out.println("Invalid response. Try again.");
+                input = "";
+            }
+        }
+
+        return Integer.parseInt(input);
+    }
+
+    public static String getFloorLocation(Scanner console) {
+        boolean contLoop = true;
+        String input = "";
+
+        while (contLoop) {
+            System.out.print("Enter new floor location of item: ");
+            input = console.nextLine();
+
+            boolean checkValid = input.length() == 3;
+
+            if (input.length() == 3) {
+                if (!Character.isLetter(input.charAt(0))) {
+                    checkValid = false;
+                }
+
+                if (!Character.isDigit(input.charAt(1))) {
+                    checkValid = false;
+                }
+
+                if (!Character.isDigit(input.charAt(2))) {
+                    checkValid = false;
+                }
+            }
+
+            if (checkValid) {
+                contLoop = false;
+            } else {
+                System.out.println("Invalid floor location. Try again.");
+                input = "";
+            }
+        }
+
+        return input;
     }
 }

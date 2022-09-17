@@ -1,4 +1,4 @@
-package com.example.RetailSystem;
+package com.example.RetailSystem.inventory_application;
 
 import java.io.IOException;
 import java.net.URI;

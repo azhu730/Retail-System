@@ -44,11 +44,10 @@ public class InventoryController {
     @PostMapping("/items")
     public Item addItem(@RequestBody Item item) {
         Item newItem = this.itemRepository.save(item);
-        System.out.println(newItem);
         return newItem;
     }
 
-    @PutMapping("/items/{tcin}")
+    @PutMapping("/items/tcin/{tcin}")
     public Item updateItem(@PathVariable("tcin") Integer tcin, @RequestBody Item i) {
         Optional<Item> checkItem = this.itemRepository.findByTcin(tcin);
 
